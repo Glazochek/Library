@@ -6,3 +6,4 @@ class AuthorModelSerializer(HyperlinkedModelSerializer):
     class Meta:
         model = Author
         fields = '__all__'
+
