@@ -6,6 +6,7 @@ from .models import TODO, Project
 from .serializers import ProjectSerializers, TODOSerializers
 from rest_framework.pagination import LimitOffsetPagination
 from rest_framework.decorators import action
+from rest_framework.permissions import IsAuthenticated, AllowAny
 
 
 def main(request):
@@ -43,11 +44,15 @@ class TODOViewSet(ModelViewSet):
     queryset = TODO.objects.all()
     serializer_class = TODOSerializers
     pagination_class = BLimitOffsetPagination
+    permissions_classes = [AllowAny]
 
     @action(detail=True, methods=['get'])
     def article_name_only(self, request, pk=None):
         article = get_object_or_404(TODO, pk=pk)
         return Response({'-': article.text})
 
-
+    def list(self, request):
+        articles = TODO.objects.all()
+        serializer = TODOSerializers(articles, many=True)
+        return Response(serializer.data)
 
